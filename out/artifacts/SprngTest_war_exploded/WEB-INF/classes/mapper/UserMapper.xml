@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0 //EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springtest.mybatis.mapper.UserMapper">
+
+    <resultMap id="queryUserMap" type="user">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="identifyId" column="identify_id"/>
+        <result property="weight" column="weight"/>
+    </resultMap>
+
+    <sql id="cols">
+        ${alias}.id,${alias}.name,${alias}.identify_id,${alias}.weight
+    </sql>
+
+    <select id="queryUser" databaseId="mysql" resultMap="queryUserMap">
+        select
+        <include refid="cols">
+            <property name="alias" value="p"/>
+        </include>
+        from people p where id=#{user.id} or weight=#{user.weight} or name=#{user.name}
+    </select>
+
+    <!--根据id获取用户信息-->
+    <select id="queryUserByMap" databaseId="mysql" resultType="user">
+        <bind name="pattern" value="'%'+nameParam+'%'"/>
+        select
+        <include refid="cols">
+            <property name="alias" value="p"/>
+        </include>
+        from people p
+        <!--<where>
+            <if test="id!=null and id!=''">
+                and id=#{id}
+            </if>
+            <if test="name!=null and name!=''">
+                and name=#{name}
+            </if>
+        </where>-->
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id==6">
+                and id=#{id}
+            </if>
+            <if test="nameParam!=null and nameParam!=''">
+                and name like #{pattern}
+            </if>
+        </trim>
+
+    </select>
+
+    <select id="queryUsers" databaseId="mysql" parameterType="string" resultType="user">
+        <!--select id,name,identify_id as identifyId from people where name = #{name, jdbcType=VARCHAR, javaType=string}-->
+        select id,name,identify_id as identifyId from people where
+        name = #{name, typeHandler=com.springtest.mybatis.typehandler.MyTypeHandler}
+    </select>
+
+    <update id="updateUser">
+        update people
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!=null and name!=''">
+                name=#{2},
+            </if>
+            <if test="identifyId!=null and identifyId!=''">
+                identify_id=#{3}
+            </if>
+        </trim>
+        <!--<set>
+            <if test="name!=null and name!=''">
+                name=#{name},
+            </if>
+            <if test="identifyId!=null and identifyId!=''">
+                identify_id=#{identifyId}
+            </if>
+        </set>-->
+        where id = #{1}
+    </update>
+
+    <insert id="insertUser" databaseId="mysql" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+        insert into people(name,identify_id) values(#{name},#{identifyId})
+    </insert>
+
+    <!--根据id列表查询-->
+    <select id="queryByList" resultType="user">
+        select id,name,identify_id from people where id in
+        <foreach collection="elist" index="index" open="(" separator="," close=")" item="elem">
+            #{elem}
+        </foreach>
+    </select>
+    <select id="queryByArray" resultType="user">
+        select id,name,identify_id from people where id in
+        <foreach collection="array" index="index" open="(" separator="," close=")" item="elem">
+            #{elem}
+        </foreach>
+    </select>
+    <select id="queryBySet" resultType="user">
+        select id,name,identify_id from people where id in
+        <foreach collection="collection" index="index" open="(" separator="," close=")" item="elem">
+            #{elem}
+        </foreach>
+    </select>
+</mapper>

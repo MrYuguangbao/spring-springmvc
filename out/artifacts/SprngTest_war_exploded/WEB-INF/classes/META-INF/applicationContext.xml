@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!--<import resource="spring-data.xml"/>-->
+    <!--<aop:aspectj-autoproxy/>-->
+
+    <!--<bean id="beanPostProcessor" class="com.springtest.bean.lifecycle.BeanProcessorImpl" />
+    <bean id="juice" class="com.springtest.bean.lifecycle.Juice" init-method="init" destroy-method="myDestroy"/>-->
+
+    <!--注入bean-->
+    <!--<bean id="role1" class="com.springtest.model.CusRole">
+        <constructor-arg index="0" value="姓名" />
+        <constructor-arg index="1" value="角色"/>
+    </bean>-->
+
+    <!--<context:component-scan base-package="mybatisAndspring"/>-->
+
+    <!--开启注解-->
+    <context:annotation-config/>
+
+    <!--配置service层 通过注解过滤被扫描的类-->
+    <context:component-scan base-package="mybatisAndspring" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+
+    <bean id="role1" class="com.springtest.model.CusRole">
+        <property name="id" value="1"/>
+        <property name="role" value="角色1"/>
+        <property name="note" value="备注1"/>
+    </bean>
+
+    <bean id="role2" class="com.springtest.model.CusRole">
+        <property name="id" value="2"/>
+        <property name="role" value="角色2"/>
+        <property name="note" value="备注2"/>
+    </bean>
+
+    <bean id="cusRole" class="com.springtest.model.CusRole">
+        <property name="id" value="3"/>
+        <property name="role" value="角色3"/>
+        <property name="note" value="备注3"/>
+    </bean>
+
+    <!--装配bean,通过XML方式-->
+    <bean id="source" class="com.springtest.model.Source">
+        <property name="fruit" value="水果"/>
+        <property name="sugar" value="糖"/>
+        <property name="size" value="大杯"/>
+    </bean>
+
+    <bean id="judice" class="com.springtest.model.JudiceMaker">
+        <property name="shop" value="贡茶"/>
+        <property name="source" ref="source"/>
+    </bean>
+
+    <bean id="complexCollection" class="com.springtest.model.ComplexAssembly">
+        <property name="id" value="1"/>
+        <property name="list">
+            <list>
+                <value>扬州</value>
+                <value>苏州</value>
+                <value>武汉</value>
+            </list>
+        </property>
+        <property name="roleList">
+            <list>
+                <ref bean="role1"/>
+                <ref bean="role2"/>
+            </list>
+        </property>
+
+    </bean>
+
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=UTC"/>
+        <property name="username" value="root"/>
+        <property name="password" value="yuguangbao"/>
+    </bean>
+
+    <!--整合spring mvc和mybatis  构建SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath:META-INF/mybatis-config.xml"/>
+    </bean>
+
+    <!--整合spring mvc和mybatis  构建SqlSessionTemplate 方法一 -->
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+
+    <!--整合spring mvc和mybatis  构建SqlSessionTemplate 方法二 -->
+    <!--<bean id="sqlSessionTemplate1" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+        <constructor-arg index="1" value="BATCH" />
+    </bean>-->
+
+
+    <!--<bean id="peopleDao" class="mybatisAndspring.dao.impl.PeopleDaoImpl">
+        <property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
+    </bean>-->
+
+    <!-- 效果等同于sqlSession.getMapper(PeopleDao.class) -->
+    <bean id="peopleDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="mapperInterface" value="mybatisAndspring.dao.PeopleDao"/>
+        <property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+
+    <!--采用自动扫描方式创建Mapper Bean,配置mapperfactorybean或mapperscannerconfigurer消除sqlsessiontemplate-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="mybatisAndspring.dao"/>
+        <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate"/>
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+    </bean>
+
+    <!--使用注解管理事务-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+
+    <!--jedis-->
+    <!--<bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="50"/>
+        <property name="maxTotal" value="100"/>
+        <property name="maxWaitMillis" value="20000"/>
+    </bean>
+
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="localhost"/>
+        <property name="port" value="6379"/>
+        &lt;!&ndash;<property name="password"&ndash;&gt;
+        <property name="poolConfig" ref="redisPoolConfig"/>
+    </bean>-->
+
+    <!--配置RedisTemplate-->
+    <!--<bean id="jdkSerializationRedisSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+    <bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="keySerializer" ref="stringRedisSerializer"/>
+        <property name="valueSerializer" ref="jdkSerializationRedisSerializer"/>
+    </bean>-->
+
+
+</beans>
