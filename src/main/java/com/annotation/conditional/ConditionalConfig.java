@@ -1,5 +1,6 @@
 package com.annotation.conditional;
 
+import com.annotation.factorybean.ColorFactoryBean;
 import com.annotation.importanno.MyImportBeanDefinitionRegistrar;
 import com.annotation.importanno.MyImportSelector;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +29,11 @@ public class ConditionalConfig {
 	@Bean("linus")
 	public User user02() {
 		return new User("linus", 59);
+	}
+
+	@Bean
+	public ColorFactoryBean colorFactoryBean() {
+		return new ColorFactoryBean();
 	}
 
 }
