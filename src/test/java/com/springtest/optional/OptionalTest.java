@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 public class OptionalTest {
 
-    @Test(expected = NoSuchMethodException.class)
+    /*@Test(expected = NoSuchMethodException.class)
     public void test1() {
         Optional<HelloWorldImpl> optional = Optional.of(null);
         optional.get();
@@ -22,5 +22,5 @@ public class OptionalTest {
     public void test2() {
         Optional<HelloWorldImpl> optional = Optional.ofNullable(null);
         optional.get();
-    }
+    }*/
 }

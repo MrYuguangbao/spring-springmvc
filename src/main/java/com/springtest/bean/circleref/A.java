@@ -10,13 +10,17 @@ import org.springframework.stereotype.Component;
  * @BelongsPackage: com.springtest.bean.circleref
  * @CreateTime: 2021-05-18 23:01:30
  */
-//@Component
+@Component
 public class A {
 
 	private B b;
 
 	public A() {
 		System.out.println("A的无参构造函数");
+	}
+
+	public B getB() {
+		return b;
 	}
 
 	public void setB(B b) {

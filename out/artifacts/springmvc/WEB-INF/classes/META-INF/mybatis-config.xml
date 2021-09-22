@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0 //EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 以下配置项顺序不能颠倒，否则启动程序会发生异常 -->
+    <!--
+    <properties></properties>
+    <settings />
+    <typeAliases/>
+    <typeHandlers />
+    <objectFactory type=""/>
+    <plugins/>
+    <environments default="">
+        <environment id="">
+            <transactionManager type=""></transactionManager>
+            <dataSource type=""></dataSource>
+        </environment>
+    </environments>
+    <databaseIdProvider type=""/>
+    <mappers></mappers>-->
+
+    <!-- 方式一：通过property子元素设值 -->
+    <!--<properties>
+        <property name="db.driver" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="db.url" value="jdbc:mysql://localhost:3306/mybatistest?
+                            useUnicode=true&amp;characterEncoding=utf-8&amp;useSSL=false&amp;serverTimezone=UTC"/>
+        <property name="db.username" value="root"/>
+        <property name="db.password" value="yuguangbao"/>
+    </properties>-->
+
+    <!-- 方式二：通过properties引用其它配置文件设值 -->
+    <properties resource="jdbc.properties"/>
+
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+        <!--<setting name="logImpl" value="LOG4J"/>-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <!-- 方式一：定义别名 -->
+        <typeAlias type="com.springtest.mybatis.model.User" alias="user"/>
+        <!-- 方式二：定义包名 -->
+        <!--<package name="com.springtest.mybatis.model"/>-->
+        <!-- 方式三：在类上面使用@Alias注解定义别名 （待验证） -->
+        <typeAlias type="mybatisAndspring.model.People" alias="people"/>
+    </typeAliases>
+
+    <!--<typeHandlers>
+        &lt;!&ndash; 方式一：可以指定jdbcType和javaType &ndash;&gt;
+        &lt;!&ndash;<typeHandler handler="com.springtest.mybatis.typehandler.MyTypeHandler" jdbcType="VARCHAR" javaType="string"/>&ndash;&gt;
+        &lt;!&ndash; 方式二：包扫描的方式，无法指定jdbcType和javaType &ndash;&gt;
+        &lt;!&ndash;<package name="com.springtest.mybatis.typehandler"/>&ndash;&gt;
+    </typeHandlers>-->
+
+    <!--当和spring mvc 整合的时候，mybatis配置文件不需要environments节点信息-->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${database.driver}"/>
+                <property name="url" value="${database.url}"/>
+                <property name="username" value="${database.username}"/>
+                <property name="password" value="${database.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--<databaseIdProvider type="com.springtest.mybatis.provider.MyDatabaseIdProvider">
+        <property name="message" value="自定义DatabaseIdProvider"/>
+    </databaseIdProvider>-->
+
+    <!--<mappers>
+        &lt;!&ndash; 通过xml实现映射器 &ndash;&gt;
+        &lt;!&ndash;<mapper resource="mapper/PeopleMapper.xml"/>&ndash;&gt;
+        &lt;!&ndash; 通过注解实现映射器 &ndash;&gt;
+        &lt;!&ndash;<mapper class="com.springtest.mybatis_spring.mapper.UserMapper" />&ndash;&gt;
+    </mappers>-->
+</configuration>

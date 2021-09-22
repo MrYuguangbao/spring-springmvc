@@ -28,11 +28,7 @@ public class ImportMain {
 		for (String b : beanDefinitionNames) {
 			System.out.println(b);
 		}
-
-		Object res1 = ac.getBean("myFactoryBean");
-		Object res2 = ac.getBean("&myFactoryBean");
-		System.out.println("res1:" + res1.getClass());
-		System.out.println("res2:" + res2.getClass());
+		
 	}
 
 }

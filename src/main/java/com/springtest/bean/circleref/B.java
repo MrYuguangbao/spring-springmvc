@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @BelongsPackage: com.springtest.bean.circleref
  * @CreateTime: 2021-05-18 23:01:52
  */
-//@Component
+@Component
 public class B {
 
 	private A a;
@@ -20,5 +20,9 @@ public class B {
 
 	public void setA(A a) {
 		this.a = a;
+	}
+
+	public A getA() {
+		return a;
 	}
 }

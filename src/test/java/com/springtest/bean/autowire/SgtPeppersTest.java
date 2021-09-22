@@ -15,12 +15,12 @@ import static org.junit.Assert.*;
  */
 public class SgtPeppersTest {
 
-    @Autowired
+   /* @Autowired
     private CompactDisc cd;
 
     @Test
     public void cd(){
         assertNotNull(cd);
-    }
+    }*/
 
 }

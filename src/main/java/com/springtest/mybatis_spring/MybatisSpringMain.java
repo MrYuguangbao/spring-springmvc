@@ -6,7 +6,7 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-@ArtistSacn("com.springtest.mybatis_spring")
+
 public class MybatisSpringMain {
 
     public static void main(String[] args) {

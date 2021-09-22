@@ -16,8 +16,9 @@ public class CircularRefMain {
 
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(CircularRefConfig.class);
-		SpringBoot springBoot = (SpringBoot)ac.getBean("springBoot");
-		System.out.println(springBoot);
+		A a = ac.getBean("a", A.class);
+		a.hello();
+
 
 	}
 

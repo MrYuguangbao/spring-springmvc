@@ -12,7 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class DepecTest {
 
-    @Test(expected = BeanCurrentlyInCreationException.class)
+    /*@Test(expected = BeanCurrentlyInCreationException.class)
     public void testCircleConstructor() throws Throwable {
         try {
             new ClassPathXmlApplicationContext("META-INF/applicationContext.xml");
@@ -20,5 +20,5 @@ public class DepecTest {
             Throwable e1 = e.getCause().getCause().getCause();
             throw e1;
         }
-    }
+    }*/
 }

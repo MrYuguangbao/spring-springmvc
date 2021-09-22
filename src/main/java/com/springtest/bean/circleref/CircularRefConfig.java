@@ -16,9 +16,4 @@ import java.time.LocalDateTime;
 @ComponentScan("com.springtest.bean.circleref")
 public class CircularRefConfig {
 
-	@Bean
-	public SpringBoot springBoot() {
-		return new SpringBoot(1L, "我的原理", LocalDateTime.now());
-	}
-
 }
